@@ -1,6 +1,9 @@
 # Bulk RNAseq data processing
 
-This folder contains information about the bulk processing of RNAseq data for the GD 2.5 oviduct project for SRF/MYOCD mice.
+This repository contains information about the bulk processing of RNAseq data. This is currently used by the DeMayo lab to process mouse ChIPseq data.
+
+> [!IMPORTANT]  
+> Eventually, the `rnaseq` and `chipseq` branches of this repository will be merged into one file where certain rules may be called to process different types of data. Certain other functions, such as the ability to process paired- or single-end data, are to be added as well.
 
 ## Step 1: create your data
 
