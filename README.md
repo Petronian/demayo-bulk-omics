@@ -1,34 +1,24 @@
-# Bulk ChIPseq data processing
+# Bulk -omics data processing
 
-This repository contains information about the bulk processing of RNAseq data. This is currently used by the DeMayo lab [(RDBL)](https://www.niehs.nih.gov/research/atniehs/labs/rdbl) to process mouse bulk ChIPseq data.
+This repository contains information about the bulk processing of -omics data.
+This will eventually be used by the DeMayo lab
+[(RDBL)](https://www.niehs.nih.gov/research/atniehs/labs/rdbl) to process bulk
+-omics data.
 
 > [!IMPORTANT]  
-> Eventually, the `rnaseq` and `chipseq` branches of this repository will be merged into one file where certain rules may be called to process different types of data. Certain other functions, such as the ability to process paired- or single-end data, are to be added as well.
+> No instructions right now while the code is being written. See other
+> branches for instructions.
 
-## Step 1: create your data
+## To-do
 
-Navigate to the directory containing the `Snakefile` and create a folder named `data` (if not already present). This pipeline takes in FASTQ files containing raw sequencing data. The data need to be placed in the appropriate directory structure before proceeding:
+You should do these in order; that's why I've ordered things in this way.
 
-```
-data/
-    group-1/
-         file-1.fastq[.gz]
-         file-2.fastq[.gz]
-         ...
-    group-2/
-         ...
-    control-<rest of name>/
-         ...
-```
-
-Each of the FASTQ files in the group directories will be treated as ONE REPLICATE, simply concatenating all of the relevant reads to an associated SAM file (which will then be processed).
-
-## Step 2: run `snakemake`
-
-Again navigate to the directory containing the `Snakefile` and execute the following command:
-
-```sh
-snakemake -p --cores [cores]
-```
-
-This will run the analysis using `[cores]` number of CPUs. Let this go, and eventually you should have your results.
+- [ ] Separate out rules into `chipseq` and `rnaseq`. Default rule should be
+      the more inclusive option, likely RNAseq.
+- [ ] Enable the files to process data with multiple replicates. This should
+      only involve adapting the existing code for ChIPseq data since the
+      existing codebase already does this for RNAseq data. Consider making
+      use of the `branch` function for Snakemake.
+- [ ] Allow the use of configuration files to set the options available for
+      each of the programs that the pipeline uses. Document this.
+- [ ] Enable `slurm` support for HPC users so they don't have to wait around.
