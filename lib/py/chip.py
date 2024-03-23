@@ -51,17 +51,16 @@ def find_all_intersections(input, output, custom_kwargs):
 # assumes the only things that will match the regex are treatment and control.
 def find_treatment_control_depths(file):
     with open(file) as fd:
-        curr_line = fd.readline()
         info = {}
-        info_pattern = compile("# tags after filtering in (\w+): (\d+)")
-        while curr_line and not len(info) >= 2:
-            curr_match = search(info_pattern)
+        info_pattern = compile("#.+after filtering in (\w+): (\d+)")
+        for line in fd.readlines():
+            if line.strip() and not line.startswith("#"): break
+            curr_match = search(info_pattern, line)
             if curr_match:
                 info[curr_match.group(1).lower()] = curr_match.group(2).lower()
-        if len(info) < 2:
-            raise RuntimeError("Unable to determine sequencing depths for treatment and control.")
-    return (info["treatment"], info["control"])
-
+            if len(info.keys()) >= 2:
+                return (info["treatment"], info["control"])
+    raise RuntimeError("Unable to determine sequencing depths for treatment and control.")
 
 def pairwise_differential_peakcall(groups_treatment_bdg, groups_control_bdg, info_files, groups, output_dir, custom_kwargs, threads = 6):
     group_bdg_info = list(zip(groups_treatment_bdg, groups_control_bdg))
@@ -71,13 +70,13 @@ def pairwise_differential_peakcall(groups_treatment_bdg, groups_control_bdg, inf
         for j in range(i + 1, len(group_bdg_info)):
             other_treat, other_control = group_bdg_info[j]
             depth_treat, depth_control = find_treatment_control_depths(info_files[i])[-1], find_treatment_control_depths(info_files[j])[-1]
-            argsList.append(["macs3", "bdgdiff"], + kwargs2list(combine_kwargs({"--t1": str(curr_treat),
-                                                                                "--t2": str(other_treat),
-                                                                                "--c1": str(curr_control),
-                                                                                "--c2": str(other_control),
-                                                                                "--d1": str(depth_treat),
-                                                                                "--d2": str(depth_control),
-                                                                                "--outdir": str(output_dir),
-                                                                                "--prefix": "-".join([str(groups[i]), str(groups[j])])},
-                                                                                custom_kwargs)))
+            argsList.append(["macs3", "bdgdiff"] + kwargs2list(combine_kwargs({"--t1": str(curr_treat),
+                                                                               "--t2": str(other_treat),
+                                                                               "--c1": str(curr_control),
+                                                                               "--c2": str(other_control),
+                                                                               "--d1": str(depth_treat),
+                                                                               "--d2": str(depth_control),
+                                                                               "--outdir": str(output_dir),
+                                                                               "--o-prefix": "-vs-".join([str(groups[i]), str(groups[j])])},
+                                                                               custom_kwargs)))
     Parallel(n_jobs=threads)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)

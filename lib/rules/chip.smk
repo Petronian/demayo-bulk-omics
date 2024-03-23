@@ -28,12 +28,12 @@ rule tss_matrix:
         sortedRegions="results/analysis/overall/" + sortedRegionsFileName,
     shell:
         "computeMatrix reference-point " +
-        kwargs2str(combine_kwargs({"-s": "{input.bigWigs}",
-                                      "-r": "{input.gtf}",
-                                      "--transcriptid": "transcript",
+        kwargs2str(combine_kwargs({"-S": "{input.bigWigs}",
+                                      "-R": "{input.gtf}",
+                                      "--transcriptID": "transcript",
                                       "-o": "{output.gzippedMtx}",
-                                      "--outfilenamematrix": "{output.mtx}",
-                                      "--outfilesortedregions": "{output.sortedRegions}"},
+                                      "--outFileNameMatrix": "{output.mtx}",
+                                      "--outFileSortedRegions": "{output.sortedRegions}"},
                                   config.get(CONFIG_COMPUTEMATRIX_ARGS, {})))
 
 # Generate the TSS heatmap. This is required by the rule 'all'.
@@ -77,7 +77,8 @@ rule find_peaks_macs:
 rule pairwise_comparisons_macs:
     input:
         bedGraphTreatment=expand("results/analysis/{group}/peaks/macs3_treat_pileup.bdg", group=EXPR_GROUPS),
-        bedGraphControl=expand("results/analysis/{group}/peaks/macs3_control_lambda.bdg", group=EXPR_GROUPS)
+        bedGraphControl=expand("results/analysis/{group}/peaks/macs3_control_lambda.bdg", group=EXPR_GROUPS),
+        peaksFile=expand("results/analysis/{group}/peaks/macs3_peaks.xls", group=EXPR_GROUPS)
     output:
         directory("results/analysis/pairwise/differential_peaks")
     run:
