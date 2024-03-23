@@ -87,8 +87,7 @@ rule samtools_coordsort:
         temp("results/aligned/tmp/{file}.deduplicate.bam")
     shell:
         "samtools sort " +
-        kwargs2str(combine_kwargs({"-o": "{output}",
-                                   "-n": ""},
+        kwargs2str(combine_kwargs({"-o": "{output}"},
                                   config.get(CONFIG_SAMTOOLS_SORT_ARGS, {}))) +
         " {input}"
 
@@ -147,6 +146,8 @@ rule feature_count:
     shell:
         "featureCounts " + 
         kwargs2str(combine_kwargs({"-a": "{input.gtf}",
-                                   "-o": "{output}"},
+                                   "-o": "{output}"} | 
+                                   ({"-p": "",
+                                    "--countReadPairs": ""} if PAIRED_END else {}),
                                   config.get(CONFIG_FEATURECOUNTS_ARGS, {}))) +
         " {input.bam}"

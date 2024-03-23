@@ -1,5 +1,5 @@
 data-directory: "data"
-paired-end: False # Important to specify this correctly!
+paired-end: True # Important to specify this correctly!
 genome: "mm10" # Important to specify this correctly!
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20"
 fastqc-args:
