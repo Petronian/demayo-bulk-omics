@@ -11,6 +11,8 @@ hisat2-args:
   -p: "6"
   --very-sensitive: ""
   -k: "1"
+hisat2-build-args:
+  -p: "6"
 samtools-sort-args:
   -@: "6"
 samtools-markdup-args:
@@ -21,6 +23,7 @@ bamCoverage-args:
   --effectiveGenomeSize: "2652783500" # Ensure this aligns with your genome!
   -p: "6"
   --normalizeUsing: "RPKM"
+  --samFlagInclude: "64" # Ensure this is set for paired-end RNAseq data!
   -e: "300"
 computeMatrix-args:
   --referencePoint: "TSS"
