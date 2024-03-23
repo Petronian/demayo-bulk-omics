@@ -1,6 +1,6 @@
 rule rna:
     input:
-        expand("results/analysis/{group}/feature_counts.txt", group=GROUPS),
+        "results/analysis/overall/feature_counts.txt",
         "results/multiqc/before",
         "results/multiqc/after"
 
@@ -123,7 +123,8 @@ rule trim_files:
     output:
         directory("results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}")
     run:
-        trim_files(input, output, PAIRED_END, config.get(CONFIG_TRIMMOMATIC_ARGS, {}))
+        trim_files(input, output, PAIRED_END, TRIMMOMATIC_TRIMMER, 
+                   config.get(CONFIG_TRIMMOMATIC_ARGS, {}))
 
 # Align the files with HISAT2.
 rule hisat2_align:
@@ -138,11 +139,11 @@ rule hisat2_align:
 # Generate a count matrix.
 rule feature_count:
     input:
-        bam="results/aligned/processed/{group}.deduplicate.bam",
-        bai="results/aligned/processed/{group}.deduplicate.bam.csi",
-        gtf="genome/annotations/hg38.ncbiRefSeq.gtf"
+        bam=expand("results/aligned/processed/{group}.deduplicate.bam", group=GROUPS),
+        bai=expand("results/aligned/processed/{group}.deduplicate.bam.csi", group=GROUPS),
+        gtf="genome/annotations/" + GENOME + ".ncbiRefSeq.gtf"
     output:
-        "results/analysis/{group}/feature_counts.txt"
+        "results/analysis/overall/feature_counts.txt"
     shell:
         "featureCounts " + 
         kwargs2str(combine_kwargs({"-a": "{input.gtf}",

@@ -1,7 +1,7 @@
 # Build the HISAT2 index using the hg38 genome.
 rule hisat2_build:
     input:
-        "genome/hg38.fa"
+        "genome/" + GENOME + ".fa"
     output:
         directory("genome/built_genome/")
     shell:

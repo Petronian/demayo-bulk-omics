@@ -20,7 +20,7 @@ rule chip:
 rule tss_matrix:
     input:
         bigWigs=expand("results/coverage/deeptools/{group}.bw", group=GROUPS),
-        gtf="genome/annotations/hg38.ncbiRefSeq.gtf"
+        gtf="genome/annotations/" + GENOME + ".ncbiRefSeq.gtf"
     output:
         mtx="results/analysis/overall/" + tssMatrixFileName,
         gzippedMtx="results/analysis/overall/" + tssMatrixFileName + ".gz",

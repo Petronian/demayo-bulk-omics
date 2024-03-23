@@ -18,6 +18,7 @@ configfile: "config.yml"
 DATA_DIRECTORY = config.get("data-directory", "data")
 GENOME = config["genome"] # critical not to mis-specify so no default
 PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
+TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-specify so no default
 GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]

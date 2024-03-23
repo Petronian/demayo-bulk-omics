@@ -3,7 +3,8 @@ import subprocess
 from joblib import delayed, Parallel
 from .validate import kwargs2list, combine_kwargs
 
-def trim_files(input, output, paired_end: bool, custom_kwargs: dict) -> None:
+def trim_files(input, output, paired_end: bool, trimmer: str, 
+               custom_kwargs: dict) -> None:
     if paired_end:
         # Preparatory work.
         parent = os.path.abspath(os.path.join(str(output), os.pardir))
@@ -41,7 +42,7 @@ def trim_files(input, output, paired_end: bool, custom_kwargs: dict) -> None:
                                  f"{parent}/unpaired/{basename}.unpaired.1.fastq.gz",
                                  f"{parent}/paired/{basename}.paired.2.fastq.gz",
                                  f"{parent}/unpaired/{basename}.unpaired.2.fastq.gz",
-                                 "SLIDINGWINDOW:51:20"])
+                                 trimmer])
         Parallel(n_jobs=6)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)
     else:
         os.makedirs(str(output))
