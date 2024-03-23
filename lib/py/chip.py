@@ -3,7 +3,7 @@ from joblib import Parallel, delayed
 from re import compile, search
 from .validate import combine_kwargs, kwargs2list
 
-def plot_heatmap(input, output, heatmapGroups, custom_kwargs):
+def plot_heatmap(input, output, heatmapGroups, custom_kwargs, threads = 6):
     argsList = []
     for i, fn in enumerate(heatmapGroups):
         # "All" is first group in the list so this works by making i [1,...,N]
@@ -11,9 +11,9 @@ def plot_heatmap(input, output, heatmapGroups, custom_kwargs):
                     "-o": str(output[i])}
         if fn != "All": sortArgs["--sortUsingSamples"] = str(i)
         argsList.append(["plotHeatmap"] + kwargs2list(combine_kwargs(sortArgs, custom_kwargs)))
-    Parallel(n_jobs=6)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)
+    Parallel(n_jobs=threads)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)
 
-def find_intersections(input, output, custom_kwargs):
+def find_intersections(input, output, custom_kwargs, threads = 6):
     argList = []
     for i, _ in enumerate(input):
         temp = [str(x) for x in input]
@@ -35,7 +35,7 @@ def find_intersections(input, output, custom_kwargs):
         file = open(output, "a")
         subprocess.run(args, text=True, stdout=file)
         file.close()
-    Parallel(n_jobs=6)(delayed(find_intersections)(argTuple) for argTuple in argList)
+    Parallel(n_jobs=threads)(delayed(find_intersections)(argTuple) for argTuple in argList)
 
 def find_all_intersections(input, output, custom_kwargs):
     temp = [str(x) for x in input]
@@ -63,7 +63,7 @@ def find_treatment_control_depths(file):
     return (info["treatment"], info["control"])
 
 
-def pairwise_differential_peakcall(groups_treatment_bdg, groups_control_bdg, info_files, groups, output_dir, custom_kwargs):
+def pairwise_differential_peakcall(groups_treatment_bdg, groups_control_bdg, info_files, groups, output_dir, custom_kwargs, threads = 6):
     group_bdg_info = list(zip(groups_treatment_bdg, groups_control_bdg))
     argsList = []
     for i, info in enumerate(group_bdg_info):
@@ -80,4 +80,4 @@ def pairwise_differential_peakcall(groups_treatment_bdg, groups_control_bdg, inf
                                                                                 "--outdir": str(output_dir),
                                                                                 "--prefix": "-".join([str(groups[i]), str(groups[j])])},
                                                                                 custom_kwargs)))
-    Parallel(n_jobs=6)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)
+    Parallel(n_jobs=threads)(delayed(subprocess.run)(jobArgSet) for jobArgSet in argsList)

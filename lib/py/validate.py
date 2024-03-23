@@ -31,9 +31,9 @@ def combine_kwargs(builtin_kwargs: dict, custom_kwargs: dict) -> dict:
     return builtin_kwargs | custom_kwargs
 
 def kwargs2str(kwargs: dict) -> str:
-    return " ".join([" ".join([k, v]) for k, v in kwargs.items()])
+    return " ".join([" ".join([str(k), str(v)]) for k, v in kwargs.items()])
 
 def kwargs2list(kwargs: dict) -> list[str]:
     out = []
-    [out.extend([k, v]) for k, v in kwargs.items()]
+    [out.extend([str(k), str(v)]) for k, v in kwargs.items()]
     return out

@@ -123,7 +123,7 @@ rule trim_files:
         directory("results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}")
     run:
         trim_files(input, output, PAIRED_END, TRIMMOMATIC_TRIMMER, 
-                   config.get(CONFIG_TRIMMOMATIC_ARGS, {}))
+                   config.get(CONFIG_TRIMMOMATIC_ARGS, {}), threads = JOBLIB_THREADS)
 
 # Align the files with HISAT2.
 rule hisat2_align:

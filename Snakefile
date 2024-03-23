@@ -24,6 +24,7 @@ TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-s
 GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]
+JOBLIB_THREADS = int(config.get("joblib-threads", 6))
 
 # Create all additional variables, together with defaults.
 tssBaseName = config.get("tss-base-name", "tss")

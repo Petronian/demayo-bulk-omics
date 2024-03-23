@@ -44,7 +44,7 @@ rule tss_heatmap:
     output:
         heatmapFilenames
     run:
-        plot_heatmap(input, output, heatmapGroups, config.get(CONFIG_PLOTHEATMAP_ARGS, {}))
+        plot_heatmap(input, output, heatmapGroups, config.get(CONFIG_PLOTHEATMAP_ARGS, {}), threads = JOBLIB_THREADS)
 
 ## RULES FOR OVERALL RESULTS
 # Note that we will need custom Python code from here on out to call shell
@@ -86,7 +86,8 @@ rule pairwise_comparisons_macs:
                                        input.peaksFile,
                                        GROUPS,
                                        output,
-                                       config.get(CONFIG_MACS3_BDGDIFF_ARGS, {}))
+                                       config.get(CONFIG_MACS3_BDGDIFF_ARGS, {}),
+                                       threads = JOBLIB_THREADS)
 
 
 # Note that this might fail when we have more than two experimental groups.
@@ -97,7 +98,7 @@ rule individual_peak_comparison:
     output:
         expand("results/analysis/{group}/peak_intersections.txt", group=EXPR_GROUPS)
     run:
-        find_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}))
+        find_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}), threads = JOBLIB_THREADS)
 
 # Recommended parameter for size: http://homer.ucsd.edu/homer/ngs/peakMotifs.html
 rule find_motifs:

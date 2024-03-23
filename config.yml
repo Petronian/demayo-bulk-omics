@@ -1,43 +1,53 @@
+# Main configuration options
+# Options that are central to the python backend underlying the Snakefile.
 data-directory: "sample-data-chip-pe-1rep"
 paired-end: True # Important to specify this correctly!
 genome: "mm10" # Important to specify this correctly!
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20"
 overall-comparisons: True
 pairwise-comparisons: True
+joblib-threads: 6
+
+# Command-line program arguments
+# These arguments individually control the programs that form the RNAseq and
+# ChIPseq processing pipelines. Some arguments may be repetitive, but this is
+# the consequence of using many separate command-line programs.
+# PAY SPECIAL ATTENTION TO THESE, SINCE YOU MAY NEED TO CHANGE SOME BASED ON
+# THE MAIN ARGUMENTS ABOVE!
 fastqc-args:
-  --threads: "6"
+  --threads: 6
 trimmomatic-args:
-  -threads: "6"
+  -threads: 6
 hisat2-args:
   --no-spliced-alignment: "" # Important for ChIPseq! Can remove if RNAseq.
-  -p: "6"
+  -p: 6
   --very-sensitive: ""
-  -k: "1"
+  -k: 1
 hisat2-build-args:
-  -p: "6"
+  -p: 6
 samtools-sort-args:
-  -@: "6"
+  -@: 6
 samtools-markdup-args:
-  -@: "6"
+  -@: 6
 samtools-index-args:
-  -@: "6"
+  -@: 6
 bamCoverage-args:
-  --effectiveGenomeSize: "2652783500" # Ensure this aligns with your genome!
-  -p: "6"
+  --effectiveGenomeSize: 2652783500 # Ensure this aligns with your genome!
+  -p: 6
   --normalizeUsing: "RPKM"
-  --samFlagInclude: "64" # Ensure this is set for paired-end RNAseq data!
-  -e: "300"
+  --samFlagInclude: 64 # Ensure this is set for paired-end RNAseq data!
+  -e: 300
 computeMatrix-args:
   --referencePoint: "TSS"
-  -a: "3000"
-  -b: "3000"
-  -p: "6"
+  -a: 3000
+  -b: 3000
+  -p: 6
 plotHeatmap-args:
   --colorMap: "Blues"
 macs3-callpeak-args:
   -g: "mm" # Ensure this aligns with your genome!
-  -q: "0.0001"
+  -q: 0.0001
   --nomodel: ""
-  --extsize: "300"
+  --extsize: 300
 findMotifsGenome-args:
-  -size: "200" # Note that deleting this will cause HOMER to fail!
+  -size: 200 # Note that deleting this will cause HOMER to fail!
