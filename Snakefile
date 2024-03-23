@@ -8,7 +8,7 @@ import subprocess
 from joblib import Parallel, delayed
 from lib.py.validate import find_groups, find_control_group, combine_kwargs, kwargs2str, kwargs2list
 from lib.py.strandedness import trim_files, hisat2_align
-from lib.py.chip import plot_heatmap, find_intersections, find_all_intersections
+from lib.py.chip import plot_heatmap, find_intersections, find_all_intersections, pairwise_differential_peakcall
 from lib.py.names import *
 
 # LOAD IN THE CONFIGURATION FILE.
@@ -18,6 +18,8 @@ configfile: "config.yml"
 DATA_DIRECTORY = config.get("data-directory", "data")
 GENOME = config["genome"] # critical not to mis-specify so no default
 PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
+OVERALL_COMPARISONS = config["overall-comparisons"] # critical not to mis-specify so no default
+PAIRWISE_COMPARISONS = config["pairwise-comparisons"] # critical not to mis-specify so no default
 TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-specify so no default
 GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))

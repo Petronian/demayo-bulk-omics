@@ -7,7 +7,7 @@ rule rna:
 # QC all files before trimming.
 rule qc_before:
     input:
-        "data/{group}"
+        DATA_DIRECTORY + "/{group}"
     output:
         directory("results/qc/before/{group}")
     shell:
@@ -118,7 +118,7 @@ rule samtools_index:
 # Trim all files.
 rule trim_files:
     input:
-        fastq="data/{group}"
+        fastq=DATA_DIRECTORY + "/{group}"
     output:
         directory("results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}")
     run:

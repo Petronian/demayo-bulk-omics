@@ -1,7 +1,9 @@
-data-directory: "data"
+data-directory: "sample-data-chip-pe-1rep"
 paired-end: True # Important to specify this correctly!
 genome: "mm10" # Important to specify this correctly!
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20"
+overall-comparisons: True
+pairwise-comparisons: True
 fastqc-args:
   --threads: "6"
 trimmomatic-args:
