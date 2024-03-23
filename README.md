@@ -34,7 +34,6 @@ are a beginner and uses `mamba` to quickly install all requirements.**
 
 6. Install the appropriate genome you need for ChIPseq analysis with HOMER:
    `configureHomer.pl -install [genome name]`.
-<<<<<<< HEAD
 
 > [!CAUTION]
 > If you install HOMER with `mamba`/`conda`, then `configureHomer.pl` might
@@ -46,18 +45,6 @@ are a beginner and uses `mamba` to quickly install all requirements.**
 > ```
 > Then, you can substitute the entire path returned by `find` for
 > `configureHomer.pl` in the command above.
-=======
-   > [!WARNING]
-   > If you install HOMER with `mamba`/`conda`, then `configureHomer.pl` might
-   > not be added to your command-line `PATH`. You may need to find where the
-   > file is stored on your system explicitly. For example:
-   > ```shell
-   > $ find ~ -name configureHomer.pl
-   > /ddn/gs1/home/laispf/usr/local/miniforge3/share/homer/configureHomer.pl
-   > ```
-   > Then, you can substitute the entire path returned by `find` for
-   > `configureHomer.pl` in the command above.
->>>>>>> 91ca7e761ff4550a51b1e0883affae85e65a9507
 
 After these tasks are completed, you should be able to move onto the next step.
 
