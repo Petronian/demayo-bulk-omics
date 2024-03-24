@@ -62,7 +62,8 @@ rule find_peaks_macs:
         narrowPeaks="results/analysis/{group}/peaks/macs3_peaks.narrowPeak",
         bed="results/analysis/{group}/peaks/macs3_narrowPeaks.bed",
         bedGraphTreatment="results/analysis/{group}/peaks/macs3_treat_pileup.bdg",
-        bedGraphControl="results/analysis/{group}/peaks/macs3_control_lambda.bdg"
+        bedGraphControl="results/analysis/{group}/peaks/macs3_control_lambda.bdg",
+        peaksFile="results/analysis/{group}/peaks/macs3_peaks.xls"
     shell:
         "macs3 callpeak " +
         kwargs2str(combine_kwargs({"-t": "{input.bam}",
