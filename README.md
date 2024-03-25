@@ -140,5 +140,5 @@ arguments are broken down into two key sections:
    to process your files. Ensure that you have `pydot` installed (`mamba install
    pydot`), and then execute `snakemake [rna or chip] --dag | dot -Tsvg > DAG.svg`.
    An SVG file will appear with a graphical summary about the steps the pipeline
-   will execute to process your files.See more on
+   will execute to process your files. See more on
    [`snakemake`'s website.](https://snakemake.readthedocs.io/en/stable/executing/cli.html#visualization)
