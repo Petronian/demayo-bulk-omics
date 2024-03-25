@@ -1,13 +1,15 @@
 # Bulk -omics data processing
 
 This repository contains information about the bulk processing of -omics data.
-This will eventually be used by the DeMayo lab
+This is used by the DeMayo lab
 [(RDBL)](https://www.niehs.nih.gov/research/atniehs/labs/rdbl) to process bulk
 -omics data.
 
-> [!IMPORTANT]  
-> This information is preliminary. More debugging and testing are needed before
-> this pipeline can be used.
+> [!NOTE]  
+> Please open an issue if you notice a bug or have any improvements in mind!
+> Any help is appreciated; just don't use the main branch for active development.
+> `combined-dev` is the main development branch for this repository; `rnaseq`
+> and `chipseq` are for record-keeping and should not be updated further.
 
 ## Setting up the pipeline
 
