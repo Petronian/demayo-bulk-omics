@@ -1,13 +1,15 @@
 # Bulk -omics data processing
 
 This repository contains information about the bulk processing of -omics data.
-This will eventually be used by the DeMayo lab
+This is used by the DeMayo lab
 [(RDBL)](https://www.niehs.nih.gov/research/atniehs/labs/rdbl) to process bulk
 -omics data.
 
-> [!IMPORTANT]  
-> This information is preliminary. More debugging and testing are needed before
-> this pipeline can be used.
+> [!NOTE]  
+> Please open an issue if you notice a bug or have any improvements in mind!
+> Any help is appreciated; just don't use the main branch for active development.
+> `combined-dev` is the main development branch for this repository; `rnaseq`
+> and `chipseq` are for record-keeping and should not be updated further.
 
 ## Setting up the pipeline
 
@@ -140,18 +142,3 @@ arguments are broken down into two key sections:
    An SVG file will appear with a graphical summary about the steps the pipeline
    will execute to process your files.See more on
    [`snakemake`'s website.](https://snakemake.readthedocs.io/en/stable/executing/cli.html#visualization)
-
-## To-do
-
-These are ordered tasks that I wish to complete before finalizing the pipeline.
-
-- [x] Separate out rules into `chipseq` and `rnaseq`. Default rule should be
-      the more inclusive option, likely RNAseq.
-- [x] Enable the files to process data with multiple replicates. This should
-      only involve adapting the existing code for ChIPseq data since the
-      existing codebase already does this for RNAseq data. Consider making
-      use of the `branch` function for Snakemake.
-- [x] Allow the use of configuration files to set the options available for
-      each of the programs that the pipeline uses. Document this.
-- [ ] Enable `slurm` support for HPC users so they don't have to wait around.
-- [ ] Clean up the atrocious coding patterns used in this repository.
