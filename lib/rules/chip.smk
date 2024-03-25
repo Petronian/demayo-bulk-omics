@@ -34,7 +34,7 @@ rule tss_matrix:
                                       "-o": "{output.gzippedMtx}",
                                       "--outFileNameMatrix": "{output.mtx}",
                                       "--outFileSortedRegions": "{output.sortedRegions}"},
-                                  config.get(CONFIG_COMPUTEMATRIX_ARGS, {})))
+                                  config.get(CONFIG_COMPUTEMATRIX_REFERENCEPOINT_ARGS, {})))
 
 # Generate the TSS heatmap. This is required by the rule 'all'.
 # Since I'm making many of these and there's no easy way to parallelize them into arguments, I'm doing it in Python.

@@ -25,6 +25,11 @@ def find_control_group(group_list: Collection[str]) -> str:
 # Validates that you do not overwrite builtin arguments and then combines them. Only
 # works for keyword arguments.
 def combine_kwargs(builtin_kwargs: dict, custom_kwargs: dict) -> dict:
+    # Error checking: if dicts are None, then make some.
+    if builtin_kwargs is None: builtin_kwargs = {}
+    if custom_kwargs is None: custom_kwargs = {}
+
+    # Overlap and return merged dicts.
     overlap = set(builtin_kwargs.keys()).intersection(custom_kwargs.keys())
     if len(overlap) > 0:
         raise ValueError("Warning: cannot override builtin keyword arguments: " + str(overlap))

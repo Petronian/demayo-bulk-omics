@@ -56,7 +56,7 @@ bamCoverage-args:                          # "bamCoverage -h" for help
   --normalizeUsing: "RPKM"
   # --samFlagInclude: 64                   # Ensure this is set (remove first #) for paired-end RNAseq data!
   -e: 300
-computeMatrix-args:                        # "computeMatrix -h" for help
+computeMatrix-reference-point-args:        # "computeMatrix reference-point -h" for help
   --referencePoint: "TSS"
   -a: 3000
   -b: 3000
