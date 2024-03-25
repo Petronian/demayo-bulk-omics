@@ -1,5 +1,8 @@
-# CONFIG.YML
+# CONFIG.YML FOR PAIRED-END FASTQ FILES AND MM10 GENOME
 # Last updated 03/24/24 by Peter Lais of the DeMayo lab
+#
+# NOTE: This is an example config file. If you use it, please replace your
+# current config.yml and rename this file to the same name.
 #
 # This file defines the configuration options of the pipeline. The specific
 # tasks that the pipeline performs will depend on the options you select
@@ -21,7 +24,7 @@
 
 # Main configuration options
 data-directory: "data"
-paired-end: False                          # Are your FASTQ files paired-end?
+paired-end: True                           # Are your FASTQ files paired-end?
 genome: "mm10"                             # UCSC genome to analyze against
                                            # Ensure this is installed with HOMER! (configureHomer.pl)
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20" # See trimmomatic docs (below)
@@ -49,12 +52,11 @@ samtools-markdup-args:                     # "samtools markdup" for help
   -@: 6
 samtools-index-args:                       # "samtools index" for help
   -@: 6
-featureCounts-args:                        # "featureCounts" for help
 bamCoverage-args:                          # "bamCoverage -h" for help
   --effectiveGenomeSize: 2652783500        # Ensure this aligns with your genome! See above help.
   -p: 6
   --normalizeUsing: "RPKM"
-  # --samFlagInclude: 64                   # Ensure this is set (remove first #) for paired-end RNAseq data!
+  --samFlagInclude: 64                     # Ensure this is set (remove first #) for paired-end RNAseq data!
   -e: 300
 computeMatrix-args:                        # "computeMatrix -h" for help
   --referencePoint: "TSS"
