@@ -29,7 +29,7 @@ are a beginner and uses `mamba` to quickly install all requirements.**
 
 4. Use `mamba`/`conda` the following to install most necessary prerequisites:
    `mamba install -c bioconda fastqc multiqc trimmomatic hisat2 samtools
-   subread deeptools bedtools homer wget snakemake`.
+   subread deeptools bedtools homer wget snakemake validators`.
 
 5. Use `pip` to install `macs3` while `mamba`/`conda` is activated:
    `pip install macs3`.
