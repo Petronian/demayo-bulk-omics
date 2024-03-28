@@ -129,7 +129,8 @@ rule trim_files:
 rule hisat2_align:
     input:
         fastq="results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}",
-        idx="genome/built_genome/"
+        idx="genome/built_genome" if not ALLOW_PREBUILT_GENOME else ancient("genome/built_genome/")
+        # above: allow people to paste in prebuilt genomes
     output:
         "results/aligned/raw/{group}.sam"
     run:
@@ -140,7 +141,7 @@ rule feature_count:
     input:
         bam=expand("results/aligned/processed/{group}.deduplicate.bam", group=GROUPS),
         bai=expand("results/aligned/processed/{group}.deduplicate.bam.csi", group=GROUPS),
-        gtf="genome/annotations/" + GENOME + ".ncbiRefSeq.gtf"
+        gtf="genome/annotations/" + GENOME_GTF_INFO["rule_fn"]
     output:
         "results/analysis/overall/feature_counts.txt"
     shell:

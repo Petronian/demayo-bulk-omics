@@ -21,7 +21,7 @@ rule chip:
 rule tss_matrix:
     input:
         bigWigs=expand("results/coverage/deeptools/{group}.bw", group=GROUPS),
-        gtf="genome/annotations/" + GENOME + ".ncbiRefSeq.gtf"
+        gtf="genome/annotations/" + GENOME_GTF_INFO["rule_fn"]
     output:
         mtx="results/analysis/overall/" + tssMatrixFileName,
         gzippedMtx="results/analysis/overall/" + tssMatrixFileName + ".gz",
@@ -102,15 +102,20 @@ rule individual_peak_comparison:
     run:
         find_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}), threads = JOBLIB_THREADS)
 
+def find_motifs_helper(wildcards):
+    base_dict = {"peakFile": f"results/analysis/{wildcards.group}/peaks/macs3_narrowPeaks.bed"}
+    if HOMER_CUSTOM: base_dict = base_dict | {"homerGenome": HOMER_GENOME}
+    return base_dict
+
 # Recommended parameter for size: http://homer.ucsd.edu/homer/ngs/peakMotifs.html
 rule find_motifs:
     input:
-        "results/analysis/{group}/peaks/macs3_narrowPeaks.bed"
+        unpack(find_motifs_helper)
         #"results/analysis/{group}/peaks.txt"
     output:
         directory("results/analysis/{group}/motifs")
     shell:
-        "findMotifsGenome.pl {input} " + GENOME + " {output} " +
+        "findMotifsGenome.pl {input.peakFile} " + HOMER_GENOME + " {output} " +
         kwargs2str(config.get(CONFIG_FINDMOTIFSGENOME_ARGS, {}))
 
 rule annotate_peaks:
@@ -122,9 +127,10 @@ rule annotate_peaks:
         go=directory("results/analysis/{group}/gene_ontology/homer"),
         geno=directory("results/analysis/{group}/genome_ontology/homer"),
     shell:
-        "annotatePeaks.pl {input} " + GENOME + " " +
+        "annotatePeaks.pl {input} " + HOMER_GENOME + " " +
         kwargs2str(combine_kwargs({"-go": "{output.go}",
-                                   "-genomeOntology": "{output.geno}"},
+                                   "-genomeOntology": "{output.geno}"} | 
+                                  ({"-gtf": HOMER_ANNOTATION} if HOMER_CUSTOM else {}),
                                   config.get(CONFIG_ANNOTATEPEAKS_ARGS, {}))) +
         " > {output.ann}"
         
@@ -138,15 +144,20 @@ rule overall_peak_comparison:
     run:
         find_all_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}))
 
+def find_combined_motifs_helper(wildcards):
+    base_dict = {"peakFile": f"results/analysis/overall/all_intersections.bed"}
+    if HOMER_CUSTOM: base_dict = base_dict | {"homerGenome": HOMER_GENOME}
+    return base_dict
+
 # Recommended parameter for size: http://homer.ucsd.edu/homer/ngs/peakMotifs.html
 rule find_combined_motifs:
     input:
-        "results/analysis/overall/all_intersections.bed"
+        unpack(find_combined_motifs_helper)
         #"results/analysis/{group}/peaks.txt"
     output:
         directory("results/analysis/overall/motifs_all_intersections")
     shell:
-        "findMotifsGenome.pl {input} " + GENOME + " {output} " +
+        "findMotifsGenome.pl {input.peakFile} " + HOMER_GENOME + " {output} " +
         kwargs2str(config.get("findMotifsGenome-args", {}))
 
 rule annotate_combined_peaks:
@@ -157,8 +168,9 @@ rule annotate_combined_peaks:
         go=directory("results/analysis/overall/gene_ontology_all_intersections/homer"),
         geno=directory("results/analysis/overall/genome_ontology_all_intersections/homer"),
     shell:
-        "annotatePeaks.pl {input} " + GENOME + " " + 
+        "annotatePeaks.pl {input} " + HOMER_GENOME + " " + 
         kwargs2str(combine_kwargs({"-go": "{output.go}",
-                                   "-genomeOntology": "{output.geno}"},
+                                   "-genomeOntology": "{output.geno}"} | 
+                                  ({"-gtf": HOMER_ANNOTATION} if HOMER_CUSTOM else {}),
                                   config.get(CONFIG_ANNOTATEPEAKS_ARGS, {}))) +
         " > {output.ann}"

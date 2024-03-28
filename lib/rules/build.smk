@@ -1,7 +1,9 @@
 # Build the HISAT2 index using the hg38 genome.
 rule hisat2_build:
     input:
-        "genome/" + GENOME + ".fa"
+        "genome/" + GENOME_FASTA_INFO["rule_fn"] if not ALLOW_PREBUILT_GENOME
+                                                 else ancient("genome/" + GENOME_FASTA_INFO["rule_fn"])
+        # above: allow people to paste in prebuilt genomes
     output:
         directory("genome/built_genome/")
     shell:

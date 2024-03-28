@@ -22,12 +22,23 @@
 # Main configuration options
 data-directory: "data"
 paired-end: False                          # Are your FASTQ files paired-end?
-genome: "mm10"                             # UCSC genome to analyze against
-                                           # Ensure this is installed with HOMER! (configureHomer.pl)
+genome: "mm10"                             # UCSC (or other) base genome to analyze against
+homer-genome: "mm10"                       # Ensure this is installed with HOMER! (configureHomer.pl)
+                                           # Can omit this to use above base genome files.
+allow-prebuilt-genome: True                # Don't force-rebuild genome if already built
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20" # See trimmomatic docs (below)
 overall-comparisons: True                  # Perform overall comparisons (ChIP)
 pairwise-comparisons: True                 # Perform differential peak calling (ChIP)
 joblib-threads: 6                          # Threads to allocate to joblib
+
+# genome can be any of the following options:
+# genome with UCSC entry
+# genome with custom fasta, naming (optional), and gtf
+# 
+# homer genome can be any of the following options:
+# unset (defaults to genome options)
+# a single string (installed homer genome)
+# a fasta, naming gtf
 
 # Command-line program arguments
 fastqc-args:                               # "fastqc -h" for help

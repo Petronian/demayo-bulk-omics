@@ -6,7 +6,7 @@ import os
 import time
 import subprocess
 from joblib import Parallel, delayed
-from lib.py.validate import find_groups, find_control_group, combine_kwargs, kwargs2str, kwargs2list
+from lib.py.validate import find_groups, find_control_group, combine_kwargs, kwargs2str, kwargs2list, process_genome_argument, process_homer_genome_argument
 from lib.py.strandedness import trim_files, hisat2_align
 from lib.py.chip import plot_heatmap, find_intersections, find_all_intersections, pairwise_differential_peakcall
 from lib.py.names import *
@@ -17,6 +17,7 @@ configfile: "config.yml"
 # Create all critical variables, together with defaults.
 DATA_DIRECTORY = config.get("data-directory", "data")
 GENOME = config["genome"] # critical not to mis-specify so no default
+ALLOW_PREBUILT_GENOME = config.get("allow-prebuilt-genome", False) # allow pasting of prebuilt genome
 PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
 OVERALL_COMPARISONS = config["overall-comparisons"] # critical not to mis-specify so no default
 PAIRWISE_COMPARISONS = config["pairwise-comparisons"] # critical not to mis-specify so no default
@@ -25,6 +26,14 @@ GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]
 JOBLIB_THREADS = int(config.get("joblib-threads", 6))
+
+# A special spot to process genomes to be used.
+GENOME_FASTA_INFO, GENOME_GTF_INFO = process_genome_argument(config["genome"])
+GENOME_FASTA_RULE_NAME = GENOME_FASTA_INFO["rule_fn"]
+GENOME_GTF_RULE_NAME = GENOME_GTF_INFO["rule_fn"]
+HOMER_GENOME, HOMER_ANNOTATION, HOMER_CUSTOM = process_homer_genome_argument(
+    config.get("homer-genome"), GENOME_FASTA_INFO, GENOME_GTF_INFO)
+print(HOMER_GENOME, HOMER_ANNOTATION, HOMER_CUSTOM)
 
 # Create all additional variables, together with defaults.
 tssBaseName = config.get("tss-base-name", "tss")
