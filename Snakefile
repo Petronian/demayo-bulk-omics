@@ -33,7 +33,6 @@ GENOME_FASTA_RULE_NAME = GENOME_FASTA_INFO["rule_fn"]
 GENOME_GTF_RULE_NAME = GENOME_GTF_INFO["rule_fn"]
 HOMER_GENOME, HOMER_ANNOTATION, HOMER_CUSTOM = process_homer_genome_argument(
     config.get("homer-genome"), GENOME_FASTA_INFO, GENOME_GTF_INFO)
-print(HOMER_GENOME, HOMER_ANNOTATION, HOMER_CUSTOM)
 
 # Create all additional variables, together with defaults.
 tssBaseName = config.get("tss-base-name", "tss")

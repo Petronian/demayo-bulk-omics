@@ -1,5 +1,5 @@
-# Build the HISAT2 index using the hg38 genome.
-rule hisat2_build:
+# Build the HISAT2 index.
+rule build_genome:
     input:
         "genome/" + GENOME_FASTA_INFO["rule_fn"] if not ALLOW_PREBUILT_GENOME
                                                  else ancient("genome/" + GENOME_FASTA_INFO["rule_fn"])
