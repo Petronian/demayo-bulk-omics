@@ -133,7 +133,7 @@ arguments are broken down into two key sections:
    | **`trimmomatic-trimmer`** | Specify the trimmer to use with trimmomatic. Search up online documentation for trimmomatic for details. |
    | `overall-comparisons` | For ChIPseq, intersect all peak locations and perform annotation, motif analysis, gene ontology analysis, and genome ontology analysis on these intersected peaks. `True` or (default) `False`. |
    | `pairwise-comparisons` | For ChIPseq, perform differential peak calling using `bdgdiff` between all pairs of ChIPseq peak sets. `True` or (default) `False`. |
-   | `joblib-threads` | How many threads to allocate to `joblib`-controlled tasks. Any positive number, default `1`. |
+   | `joblib-threads` | How many threads to allocate to `joblib`-controlled tasks. Any positive integer, default `1`. |
 
 > [!NOTE]
 > If providing custom FASTA and GTF files for `genome`, do the following:
