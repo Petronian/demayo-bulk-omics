@@ -168,9 +168,3 @@ arguments are broken down into two key sections:
    An SVG file will appear with a graphical summary about the steps the pipeline
    will execute to process your files. See more on
    [`snakemake`'s website.](https://snakemake.readthedocs.io/en/stable/executing/cli.html#visualization)
-
-## To-do
-
-- [ ] Implement the use of custom genomes not installed in HOMER, custom annotations,
-      custom gene names (RefSeq/ENCODE/ENSEMBL), genomes and such can be specified as
-      links.
