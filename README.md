@@ -136,7 +136,7 @@ arguments are broken down into two key sections:
    | `joblib-threads` | How many threads to allocate to `joblib`-controlled tasks. Any positive number, default `1`. |
 
 > [!NOTE]
-> If providing a custom FASTA and GTF file for `genome`, do the following:
+> If providing custom FASTA and GTF files for `genome`, do the following:
 >
 > ```yaml
 > - genome:
@@ -144,7 +144,7 @@ arguments are broken down into two key sections:
 >   - gtf: "[link or path to GTF file]"
 > ```
 >
-> Both `fasta` and `gtf` must be specified and not empty strings (`""`).
+> Both `fasta` and `gtf` must be specified and not empty strings (`""`). **They can be gzipped (ending with `.gz` or `.gzip`) or uncompressed.**
 
 2. **Program-specific arguments.** These arguments directly control the behavior
    of the programs making up the pipeline. **Please see the individual documentation
