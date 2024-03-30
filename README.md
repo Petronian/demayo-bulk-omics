@@ -101,9 +101,11 @@ After these tasks are completed, you should be able to move onto the next step.
 5. Set up your `config.yml` file (see below). **Ensure that all variables are
    correctly configured for what you hope to analyze.**
 
-6. Execute `snakemake [rna or chip] --cores [number of cores]` to begin the
-   pipeline. Use `rna` if you simply want a count matrix from your data; use
-   `chip` if you want to perform ChIPseq analysis. The number of cores determines
+6. Execute `snakemake [target] --cores [number of cores]` to begin the
+   pipeline. There are three values you can substitute for `[target]`:
+   Use `rna` if you simply want a count matrix from your data; use
+   `chip` if you want to perform ChIPseq analysis; use `build_genome` if 
+   you simply want to build genome files. The number of cores determines
    how many resources on your computer are allocated to this pipeline; I've
    personally noticed that six cores is a good balance between performance
    and resource use.
@@ -118,7 +120,31 @@ arguments are broken down into two key sections:
 
 1. **Pipeline-specific arguments.** These parameters control the behavior of
    the pipeline as a whole and have little to do with the components of the
-   pipeline themselves.
+   pipeline themselves. The table below has a description of the pipeline-
+   specific arguments; bold arguments are required/cannot be omitted.
+
+   | Argument | Description |
+   | -------- | ----------- |
+   | `data-directory` | Location of the data directory. Can be omitted; if so, data directory defaults to `data`. |
+   | **`paired-end`** | Are the FASTQ files you're using paired-end? `True` or `False`. |
+   | **`genome`** | Genome to use for alignment and feature counting. This can be either (a) the name of a UCSC genome, such as `mm10` or `hg38`, with an optional period-delimited suffix describing the database to take naming from, such as `mm10.knownGene` or `hg38.ensGene`, or (b) paths/links to a FASTQ and GTF file. See the callout below. |
+   | `homer-genome` | Genome to use for peak annotation with HOMER. There are two options: (a) if omitted, defaults to the FASTA and GTF files used for the `genome` arguent (corresponding to the files in the `genome/` directory) or (b) if a string, such as `mm10` or `hg38`, corresponds to a dataset installed using HOMER. _If (b), ensure the dataset is installed in HOMER first using `configureHomer.pl` (see above). Custom FASTA and GTF files for HOMER are not supported. |
+   | `allow-prebuilt-genome` | If a prebuilt genome (`.ht2l` files) are placed in the `genome/built_genome` folder, do not rebuilt the genome. `True` or (default) `False`. |
+   | **`trimmomatic-trimmer`** | Specify the trimmer to use with trimmomatic. Search up online documentation for trimmomatic for details. |
+   | `overall-comparisons` | For ChIPseq, intersect all peak locations and perform annotation, motif analysis, gene ontology analysis, and genome ontology analysis on these intersected peaks. `True` or (default) `False`. |
+   | `pairwise-comparisons` | For ChIPseq, perform differential peak calling using `bdgdiff` between all pairs of ChIPseq peak sets. `True` or (default) `False`. |
+   | `joblib-threads` | How many threads to allocate to `joblib`-controlled tasks. Any positive number, default `1`. |
+
+> [!NOTE]
+> If providing a custom FASTA and GTF file for `genome`, do the following:
+>
+> ```yaml
+> - genome:
+>   - fasta: "[link or path to FASTA file]"
+>   - gtf: "[link or path to GTF file]"
+> ```
+>
+> Both `fasta` and `gtf` must be specified and not empty strings (`""`).
 
 2. **Program-specific arguments.** These arguments directly control the behavior
    of the programs making up the pipeline. **Please see the individual documentation
@@ -130,7 +156,7 @@ arguments are broken down into two key sections:
 
 1. **Seeing the commands the pipeline uses:** A good way to see what commands
    the pipeline will execute to process your files is to look at the results of
-   a *dry-run*: `snakemake [rna or chip] --cores 1 --dry-run -p`. This will
+   a *dry-run*: `snakemake [target] --cores 1 --dry-run -p`. This will
    print the commands that the pipeline will use in **yellow** so you can see 
    what commands/programs are being used as well as the arguments being supplied
    to them.
