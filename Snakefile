@@ -19,13 +19,13 @@ DATA_DIRECTORY = config.get("data-directory", "data")
 GENOME = config["genome"] # critical not to mis-specify so no default
 ALLOW_PREBUILT_GENOME = config.get("allow-prebuilt-genome", False) # allow pasting of prebuilt genome
 PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
-OVERALL_COMPARISONS = config["overall-comparisons"] # critical not to mis-specify so no default
-PAIRWISE_COMPARISONS = config["pairwise-comparisons"] # critical not to mis-specify so no default
+OVERALL_COMPARISONS = config.get("overall-comparisons", False) # critical not to mis-specify so no default
+PAIRWISE_COMPARISONS = config.get("pairwise-comparisons", False) # critical not to mis-specify so no default
 TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-specify so no default
 GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]
-JOBLIB_THREADS = int(config.get("joblib-threads", 6))
+JOBLIB_THREADS = int(config.get("joblib-threads", 1))
 
 # A special spot to process genomes to be used.
 GENOME_FASTA_INFO, GENOME_GTF_INFO = process_genome_argument(config["genome"])
