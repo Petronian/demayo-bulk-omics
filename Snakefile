@@ -20,7 +20,6 @@ GENOME = config["genome"] # critical not to mis-specify so no default
 ALLOW_PREBUILT_GENOME = config.get("allow-prebuilt-genome", False) # allow pasting of prebuilt genome
 PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
 OVERALL_COMPARISONS = config.get("overall-comparisons", False) # critical not to mis-specify so no default
-PAIRWISE_COMPARISONS = config.get("pairwise-comparisons", False) # critical not to mis-specify so no default
 TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-specify so no default
 GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
@@ -45,7 +44,7 @@ heatmapFilenames = expand("results/analysis/overall/sortUsing{sample}_" + tssGra
 # Rule imports.
 include: "lib/rules/chip.smk" # provides "rna" rule
 include: "lib/rules/rna.smk" # provides "chip" rule
-include: "lib/rules/build.smk"
+include: "lib/rules/build.smk" # provides "build_genome" rule
 include: "lib/rules/downloads.smk"
 include: "lib/rules/viz.smk"
 
