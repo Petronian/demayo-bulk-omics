@@ -25,6 +25,7 @@ GROUPS = find_groups(DATA_DIRECTORY)
 CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]
 JOBLIB_THREADS = int(config.get("joblib-threads", 1))
+DEDUPLICATE = config.get("mark-duplicate-reads", False)
 
 # A special spot to process genomes to be used.
 GENOME_FASTA_INFO, GENOME_GTF_INFO = process_genome_argument(config["genome"])
@@ -40,6 +41,7 @@ sortedRegionsFileName = "%s_heatmap1_sorted_regions.bed" % tssBaseName
 tssGraphFileName = "%s_profile_graph.pdf" % tssBaseName
 heatmapGroups = ["All"] + GROUPS
 heatmapFilenames = expand("results/analysis/overall/sortUsing{sample}_" + tssGraphFileName, sample = heatmapGroups)
+input_source = ".deduplicate" if DEDUPLICATE else "" # Remove duplicates or don't
 
 # Rule imports.
 include: "lib/rules/chip.smk" # provides "rna" rule

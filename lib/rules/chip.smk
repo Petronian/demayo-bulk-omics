@@ -53,10 +53,10 @@ rule find_peaks_macs:
     input:
         #ucsc="results/coverage/deeptools/{group}.bw", # coverage, deeptools; required elsewhere
         #ucsc2="results/coverage/homer/{group}.bedGraph.gz", # coverage, homer; not needed
-        bam="results/aligned/processed/{group}.deduplicate.bam",
-        bai="results/aligned/processed/{group}.deduplicate.bam.csi",
-        ctrlBam=expand("results/aligned/processed/{group}.deduplicate.bam", group=CONTROL_GROUP),
-        ctrlBai=expand("results/aligned/processed/{group}.deduplicate.bam.csi", group=CONTROL_GROUP)
+        bam="results/aligned/processed/{group}" + input_source + ".bam",
+        bai="results/aligned/processed/{group}" + input_source + ".bam.csi",
+        ctrlBam=expand("results/aligned/processed/{group}" + input_source + ".bam", group=CONTROL_GROUP),
+        ctrlBai=expand("results/aligned/processed/{group}" + input_source + ".bam.csi", group=CONTROL_GROUP)
     output:
         narrowPeaks="results/analysis/{group}/peaks/macs3_peaks.narrowPeak",
         bed="results/analysis/{group}/peaks/macs3_narrowPeaks.bed",

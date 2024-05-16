@@ -24,6 +24,7 @@ data-directory: "data"
 paired-end: False                          # Are your FASTQ files paired-end?
 genome: "mm10"                             # UCSC (or other) base genome to analyze against
 allow-prebuilt-genome: True                # Don't force-rebuild genome if already built
+mark-duplicate-reads: False                # Use SAMTools to mark duplicate reads
 trimmomatic-trimmer: "SLIDINGWINDOW:51:20" # See trimmomatic docs (below)
 overall-comparisons: True                  # Perform overall comparisons (ChIP)
 pairwise-comparisons: True                 # Perform differential peak calling (ChIP)
