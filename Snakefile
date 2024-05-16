@@ -15,27 +15,27 @@ from lib.py.names import *
 configfile: "config.yml"
 
 # Create all critical variables, together with defaults.
-DATA_DIRECTORY = config.get("data-directory", "data")
-GENOME = config["genome"] # critical not to mis-specify so no default
-ALLOW_PREBUILT_GENOME = config.get("allow-prebuilt-genome", False) # allow pasting of prebuilt genome
-PAIRED_END = config["paired-end"] # critical not to mis-specify so no default
-OVERALL_COMPARISONS = config.get("overall-comparisons", False) # critical not to mis-specify so no default
+DATA_DIRECTORY = config.get(CONFIG_DATA_DIRECTORY, "data")
+GENOME = config[CONFIG_GENOME] # critical not to mis-specify so no default
+ALLOW_PREBUILT_GENOME = config.get(CONFIG_ALLOW_PREBUILT_GENOME, False) # allow pasting of prebuilt genome
+PAIRED_END = config[CONFIG_PAIRED_END] # critical not to mis-specify so no default
+OVERALL_COMPARISONS = config.get(CONFIG_OVERALL_COMPARISONS, False) # critical not to mis-specify so no default
 TRIMMOMATIC_TRIMMER = config[CONFIG_TRIMMOMATIC_TRIMMER] # critical not to mis-specify so no default
 GROUPS = find_groups(DATA_DIRECTORY)
-CONTROL_GROUP = config.get("control-group", find_control_group(GROUPS))
+CONTROL_GROUP = config.get(CONFIG_CONTROL_GROUP, find_control_group(GROUPS))
 EXPR_GROUPS = [name for name in GROUPS if CONTROL_GROUP is None or name != CONTROL_GROUP]
-JOBLIB_THREADS = int(config.get("joblib-threads", 1))
-DEDUPLICATE = config.get("mark-duplicate-reads", False)
+JOBLIB_THREADS = int(config.get(CONFIG_JOBLIB_THREADS, 1))
+DEDUPLICATE = config.get(CONFIG_MARK_DUPLICATE_READS, False)
 
 # A special spot to process genomes to be used.
-GENOME_FASTA_INFO, GENOME_GTF_INFO = process_genome_argument(config["genome"])
+GENOME_FASTA_INFO, GENOME_GTF_INFO = process_genome_argument(GENOME)
 GENOME_FASTA_RULE_NAME = GENOME_FASTA_INFO["rule_fn"]
 GENOME_GTF_RULE_NAME = GENOME_GTF_INFO["rule_fn"]
 HOMER_GENOME, HOMER_ANNOTATION, HOMER_CUSTOM = process_homer_genome_argument(
-    config.get("homer-genome"), GENOME_FASTA_INFO, GENOME_GTF_INFO)
+    config.get(CONFIG_HOMER_GENOME), GENOME_FASTA_INFO, GENOME_GTF_INFO)
 
 # Create all additional variables, together with defaults.
-tssBaseName = config.get("tss-base-name", "tss")
+tssBaseName = config.get(CONFIG_TSS_BASE_NAME, "tss")
 tssMatrixFileName = "%s_profile_matrix.txt" % tssBaseName
 sortedRegionsFileName = "%s_heatmap1_sorted_regions.bed" % tssBaseName
 tssGraphFileName = "%s_profile_graph.pdf" % tssBaseName
