@@ -128,12 +128,11 @@ arguments are broken down into two key sections:
    | `data-directory` | Location of the data directory. Can be omitted; if so, data directory defaults to `data`. |
    | **`paired-end`** | Are the FASTQ files you're using paired-end? `True` or `False`. |
    | **`genome`** | Genome to use for alignment and feature counting. This can be either (a) the name of a UCSC genome, such as `mm10` or `hg38`, with an optional period-delimited suffix describing the database to take naming from, such as `mm10.knownGene` or `hg38.ensGene`, or (b) paths/links to a FASTQ and GTF file. See the callout below. |
-   | `homer-genome` | Genome to use for peak annotation with HOMER. There are two options: (a) if omitted, defaults to the FASTA and GTF files used for the `genome` arguent (corresponding to the files in the `genome/` directory) or (b) if a string, such as `mm10` or `hg38`, corresponds to a dataset installed using HOMER. _If (b), ensure the dataset is installed in HOMER first using `configureHomer.pl` (see above). Custom FASTA and GTF files for HOMER are not supported. |
+   | `homer-genome` | Genome to use for peak annotation with HOMER. There are two options: (a) if omitted, defaults to the FASTA and GTF files used for the `genome` arguent (corresponding to the files in the `genome/` directory) or (b) if a string, such as `mm10` or `hg38`, corresponds to a dataset installed using HOMER. _If (b), ensure the dataset is installed in HOMER first using `configureHomer.pl` (see above). Custom FASTA and GTF files specifically for HOMER are not supported._ |
    | `allow-prebuilt-genome` | If a prebuilt genome (`.ht2l` files) are placed in the `genome/built_genome` folder, do not rebuilt the genome. `True` or (default) `False`. |
    | **`trimmomatic-trimmer`** | Specify the trimmer to use with trimmomatic. Search up online documentation for trimmomatic for details. |
    | `mark-duplicate-reads` | Whether to mark duplicate reads (but not explicitly _remove_ them) using SAMTools. `True` or (default) `False`. |
    | `overall-comparisons` | For ChIPseq, intersect all peak locations and perform annotation, motif analysis, gene ontology analysis, and genome ontology analysis on these intersected peaks. `True` or (default) `False`. |
-   | `pairwise-comparisons` | For ChIPseq, perform differential peak calling using `bdgdiff` between all pairs of ChIPseq peak sets. `True` or (default) `False`. |
    | `joblib-threads` | How many threads to allocate to `joblib`-controlled tasks. Any positive integer, default `1`. |
 
 > [!NOTE]
