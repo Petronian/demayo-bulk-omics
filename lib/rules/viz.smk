@@ -1,8 +1,8 @@
 # Create coverage file with extended reads.
 rule generate_bam_coverage:
     input:
-        bam="results/aligned/processed/{group}.deduplicate.bam",
-        bai="results/aligned/processed/{group}.deduplicate.bam.csi"
+        bam="results/aligned/processed/{group}" + input_source + ".bam",
+        bai="results/aligned/processed/{group}" + input_source + ".bam.csi"
     output:
         "results/coverage/deeptools/{group}.bw"
     shell:

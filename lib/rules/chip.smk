@@ -12,8 +12,7 @@ rule chip:
          "results/analysis/overall/gene_ontology_all_intersections/homer",
          "results/analysis/overall/genome_ontology_all_intersections/homer",
          "results/analysis/overall/motifs_all_intersections",
-         heatmapFilenames] if OVERALL_COMPARISONS else [],
-        ["results/analysis/pairwise/differential_peaks"] if PAIRWISE_COMPARISONS else []
+         heatmapFilenames] if OVERALL_COMPARISONS else []
 
 # Generate the TSS matrix using deepTools to generate the TSS heatmap later.
 # NOTE that this matrix contains which heatmap values correspond to which sample, so we will only pre-generate the sorted heatmaps
@@ -54,10 +53,10 @@ rule find_peaks_macs:
     input:
         #ucsc="results/coverage/deeptools/{group}.bw", # coverage, deeptools; required elsewhere
         #ucsc2="results/coverage/homer/{group}.bedGraph.gz", # coverage, homer; not needed
-        bam="results/aligned/processed/{group}.deduplicate.bam",
-        bai="results/aligned/processed/{group}.deduplicate.bam.csi",
-        ctrlBam=expand("results/aligned/processed/{group}.deduplicate.bam", group=CONTROL_GROUP),
-        ctrlBai=expand("results/aligned/processed/{group}.deduplicate.bam.csi", group=CONTROL_GROUP)
+        bam="results/aligned/processed/{group}" + input_source + ".bam",
+        bai="results/aligned/processed/{group}" + input_source + ".bam.csi",
+        ctrlBam=expand("results/aligned/processed/{group}" + input_source + ".bam", group=CONTROL_GROUP),
+        ctrlBai=expand("results/aligned/processed/{group}" + input_source + ".bam.csi", group=CONTROL_GROUP)
     output:
         narrowPeaks="results/analysis/{group}/peaks/macs3_peaks.narrowPeak",
         bed="results/analysis/{group}/peaks/macs3_narrowPeaks.bed",
@@ -74,23 +73,6 @@ rule find_peaks_macs:
                                    "--bdg": ""},
                                   config.get(CONFIG_MACS3_CALLPEAK_ARGS, {}))) +
         " && sed -E 's/\..*$/+/g' {output.narrowPeaks} > {output.bed}"
-
-rule pairwise_comparisons_macs:
-    input:
-        bedGraphTreatment=expand("results/analysis/{group}/peaks/macs3_treat_pileup.bdg", group=EXPR_GROUPS),
-        bedGraphControl=expand("results/analysis/{group}/peaks/macs3_control_lambda.bdg", group=EXPR_GROUPS),
-        peaksFile=expand("results/analysis/{group}/peaks/macs3_peaks.xls", group=EXPR_GROUPS)
-    output:
-        directory("results/analysis/pairwise/differential_peaks")
-    run:
-        pairwise_differential_peakcall(input.bedGraphTreatment,
-                                       input.bedGraphControl,
-                                       input.peaksFile,
-                                       GROUPS,
-                                       output,
-                                       config.get(CONFIG_MACS3_BDGDIFF_ARGS, {}),
-                                       threads = JOBLIB_THREADS)
-
 
 # Note that this might fail when we have more than two experimental groups.
 rule individual_peak_comparison:
