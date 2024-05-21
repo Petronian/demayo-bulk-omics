@@ -20,12 +20,12 @@
 # The command needed to display help information is written above each block.
 
 # Main configuration options
-data-directory: "data"
-paired-end: False                          # Are your FASTQ files paired-end?
+data-directory: "sample-data-chip-pe-1rep"
+paired-end: True                           # Are your FASTQ files paired-end?
 genome: "mm10"                             # UCSC (or other) base genome to analyze against
 allow-prebuilt-genome: True                # Don't force-rebuild genome if already built
-mark-duplicate-reads: False                # Use SAMTools to mark duplicate reads
-trimmomatic-trimmer: "SLIDINGWINDOW:51:20" # See trimmomatic docs (below)
+mark-duplicate-reads: True                 # Use SAMTools to mark duplicate reads
+trimmomatic-trimmer: "AVGQUAL:20"          # See trimmomatic docs (below)
 overall-comparisons: True                  # Perform overall comparisons (ChIP)
 pairwise-comparisons: True                 # Perform differential peak calling (ChIP)
 joblib-threads: 6                          # Threads to allocate to joblib
@@ -64,7 +64,7 @@ bamCoverage-args:                          # "bamCoverage -h" for help
   --effectiveGenomeSize: 2652783500        # Ensure this aligns with your genome! See above help.
   -p: 6
   --normalizeUsing: "RPKM"
-  # --samFlagInclude: 64                   # Ensure this is set (remove first #) for paired-end RNAseq data!
+  --samFlagInclude: 64                   # Ensure this is set (remove first #) for paired-end RNAseq data!
   -e: 300
 computeMatrix-reference-point-args:        # "computeMatrix reference-point -h" for help
   --referencePoint: "TSS"

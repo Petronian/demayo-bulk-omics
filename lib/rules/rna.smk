@@ -82,9 +82,9 @@ rule samtools_fixmate:
 # index the sorted BAM files.
 rule samtools_coordsort:
     input:
-        "results/aligned/tmp/{file}.fixmate.bam"
+        "results/aligned/tmp/{file}.fixmate.bam" if DEDUPLICATE else "results/aligned/raw/{file}.sam"
     output:
-        temp("results/aligned/tmp/{file}.deduplicate.bam")
+        temp("results/aligned/tmp/{file}.deduplicate.bam") if DEDUPLICATE else "results/aligned/processed/{file}.bam"
     shell:
         "samtools sort " +
         kwargs2str(combine_kwargs({"-o": "{output}"},
@@ -105,14 +105,13 @@ rule samtools_deduplicate:
 # Index the sorted BAM files.
 rule samtools_index:
     input:
-        "results/aligned/processed/{file}.deduplicate.bam" if DEDUPLICATE else "results/aligned/raw/{file}.sam"
+        "results/aligned/processed/{file}" + input_source + ".bam"
     output:
-        bam="results/aligned/processed/{file}.bam" if not DEDUPLICATE else [],
-        csi="results/aligned/processed/{file}" + input_source + ".bam.csi"
+        "results/aligned/processed/{file}" + input_source + ".bam.csi"
     shell:
         "samtools index " + 
         kwargs2str(combine_kwargs({"-c": "",
-                                   "-o": "{output.csi}"},
+                                   "-o": "{output}"},
                                   config.get(CONFIG_SAMTOOLS_MARKDUP_ARGS, {}))) +
         " {input}"
 
