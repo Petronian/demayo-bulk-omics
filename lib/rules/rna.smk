@@ -82,9 +82,9 @@ rule samtools_fixmate:
 # index the sorted BAM files.
 rule samtools_coordsort:
     input:
-        "results/aligned/tmp/{file}.fixmate.bam"
+        "results/aligned/tmp/{file}.fixmate.bam" if DEDUPLICATE else "results/aligned/raw/{file}.sam"
     output:
-        temp("results/aligned/tmp/{file}.deduplicate.bam")
+        temp("results/aligned/tmp/{file}.deduplicate.bam") if DEDUPLICATE else "results/aligned/processed/{file}.bam"
     shell:
         "samtools sort " +
         kwargs2str(combine_kwargs({"-o": "{output}"},
@@ -105,9 +105,9 @@ rule samtools_deduplicate:
 # Index the sorted BAM files.
 rule samtools_index:
     input:
-        "results/aligned/processed/{file}.deduplicate.bam"
+        "results/aligned/processed/{file}" + input_source + ".bam"
     output:
-        "results/aligned/processed/{file}.deduplicate.bam.csi"
+        "results/aligned/processed/{file}" + input_source + ".bam.csi"
     shell:
         "samtools index " + 
         kwargs2str(combine_kwargs({"-c": "",
@@ -139,8 +139,8 @@ rule hisat2_align:
 # Generate a count matrix.
 rule feature_count:
     input:
-        bam=expand("results/aligned/processed/{group}.deduplicate.bam", group=GROUPS),
-        bai=expand("results/aligned/processed/{group}.deduplicate.bam.csi", group=GROUPS),
+        bam=expand("results/aligned/processed/{group}" + input_source + ".bam", group=GROUPS),
+        bai=expand("results/aligned/processed/{group}" + input_source + ".bam.csi", group=GROUPS),
         gtf="genome/annotations/" + GENOME_GTF_INFO["rule_fn"]
     output:
         "results/analysis/overall/feature_counts.txt"
