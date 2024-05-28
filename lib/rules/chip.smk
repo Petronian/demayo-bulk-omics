@@ -75,14 +75,14 @@ rule find_peaks_macs:
         " && sed -E 's/\..*$/+/g' {output.narrowPeaks} > {output.bed}"
 
 # Note that this might fail when we have more than two experimental groups.
-rule individual_peak_comparison:
-    input:
-        expand("results/analysis/{group}/peaks/macs3_narrowPeaks.bed", group=EXPR_GROUPS)
-        #expand("results/analysis/{group}/peaks.bed", group=EXPR_GROUPS)
-    output:
-        expand("results/analysis/{group}/peak_intersections.txt", group=EXPR_GROUPS)
-    run:
-        find_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}), threads = JOBLIB_THREADS)
+# rule individual_peak_comparison:
+#     input:
+#         expand("results/analysis/{group}/peaks/macs3_narrowPeaks.bed", group=EXPR_GROUPS)
+#         #expand("results/analysis/{group}/peaks.bed", group=EXPR_GROUPS)
+#     output:
+#         expand("results/analysis/{group}/peak_intersections.txt", group=EXPR_GROUPS)
+#     run:
+#         find_intersections(input, output, config.get(CONFIG_BEDTOOLS_INTERSECT_ARGS, {}), threads = JOBLIB_THREADS)
 
 def find_motifs_helper(wildcards):
     base_dict = {"peakFile": f"results/analysis/{wildcards.group}/peaks/macs3_narrowPeaks.bed"}
@@ -106,12 +106,14 @@ rule annotate_peaks:
         #"results/analysis/{group}/peaks.txt"
     output:
         ann="results/analysis/{group}/annotated_peaks.txt",
+        annStats="results/analysis/{group}/annotated_peaks_stats.txt",
         go=directory("results/analysis/{group}/gene_ontology/homer"),
         geno=directory("results/analysis/{group}/genome_ontology/homer"),
     shell:
         "annotatePeaks.pl {input} " + HOMER_GENOME + " " +
         kwargs2str(combine_kwargs({"-go": "{output.go}",
-                                   "-genomeOntology": "{output.geno}"} | 
+                                   "-genomeOntology": "{output.geno}",
+                                   "-annStats": "{output.annStats}"} | 
                                   ({"-gtf": HOMER_ANNOTATION} if HOMER_CUSTOM else {}),
                                   config.get(CONFIG_ANNOTATEPEAKS_ARGS, {}))) +
         " > {output.ann}"
@@ -147,12 +149,14 @@ rule annotate_combined_peaks:
         "results/analysis/overall/all_intersections.bed"
     output:
         ann="results/analysis/overall/annotated_all_intersections.txt",
+        annStats="results/analysis/overall/annotated_all_intersections_stats.txt",
         go=directory("results/analysis/overall/gene_ontology_all_intersections/homer"),
         geno=directory("results/analysis/overall/genome_ontology_all_intersections/homer"),
     shell:
         "annotatePeaks.pl {input} " + HOMER_GENOME + " " + 
         kwargs2str(combine_kwargs({"-go": "{output.go}",
-                                   "-genomeOntology": "{output.geno}"} | 
+                                   "-genomeOntology": "{output.geno}",
+                                   "-annStats": "{output.annStats}"} | 
                                   ({"-gtf": HOMER_ANNOTATION} if HOMER_CUSTOM else {}),
                                   config.get(CONFIG_ANNOTATEPEAKS_ARGS, {}))) +
         " > {output.ann}"

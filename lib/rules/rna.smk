@@ -120,10 +120,15 @@ rule trim_files:
     input:
         fastq=DATA_DIRECTORY + "/{group}"
     output:
-        directory("results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}")
+        results=directory("results/trimmed_data/{group}/paired" if PAIRED_END else "results/trimmed_data/{group}"),
+        summaryStats="results/trimmed_data/{group}/stats_summary.txt"
     run:
-        trim_files(input, output, PAIRED_END, TRIMMOMATIC_TRIMMER, 
-                   config.get(CONFIG_TRIMMOMATIC_ARGS, {}), threads = JOBLIB_THREADS)
+        trim_files(input.fastq,
+                   output.results,
+                   PAIRED_END,
+                   TRIMMOMATIC_TRIMMER, 
+                   combine_kwargs({"-summary": output.summaryStats}, config.get(CONFIG_TRIMMOMATIC_ARGS, {})),
+                                  threads = JOBLIB_THREADS)
 
 # Align the files with HISAT2.
 rule hisat2_align:
@@ -132,9 +137,14 @@ rule hisat2_align:
         idx="genome/built_genome" if not ALLOW_PREBUILT_GENOME else ancient("genome/built_genome/")
         # above: allow people to paste in prebuilt genomes
     output:
-        "results/aligned/raw/{group}.sam"
+        results="results/aligned/raw/{group}.sam",
+        summaryFile="results/aligned/raw/{group}_summary_file.txt"
     run:
-        hisat2_align(input, output, PAIRED_END, config.get("hisat2-args", {}))
+        hisat2_align(input.fastq,
+                     input.idx,
+                     output.results,
+                     PAIRED_END,
+                     combine_kwargs({"--summary-file": output.summaryFile}, config.get("hisat2-args", {})))
         
 # Generate a count matrix.
 rule feature_count:
@@ -143,11 +153,12 @@ rule feature_count:
         bai=expand("results/aligned/processed/{group}" + input_source + ".bam.csi", group=GROUPS),
         gtf="genome/annotations/" + GENOME_GTF_INFO["rule_fn"]
     output:
-        "results/analysis/overall/feature_counts.txt"
+        out="results/analysis/overall/feature_counts.txt",
+        outSummary="results/analysis/overall/feature_counts.txt.summary"
     shell:
         "featureCounts " + 
         kwargs2str(combine_kwargs({"-a": "{input.gtf}",
-                                   "-o": "{output}"} | 
+                                   "-o": "{output.out}"} | 
                                    ({"-p": "",
                                     "--countReadPairs": ""} if PAIRED_END else {}),
                                   config.get(CONFIG_FEATURECOUNTS_ARGS, {}))) +
